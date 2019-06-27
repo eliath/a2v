@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# vi:syntax=sh
+
+usage() {
+  echo "USAGE:"
+  echo "  $0 <mp3-dir> <image-file> "
+}
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+  usage
+  exit 1
+fi
+
+dest="$1/mp4"
+mkdir -p "$dest"
+cd "$1"
+for mp3 in *.mp3; do
+  echo "Converting ${mp3} ..."
+  name=$(basename "${mp3%.mp3}")
+  ffmpeg -loop 1 -i "$2" -i "$mp3" -c:a copy -c:v libx264 -shortest "${dest}/${name}.mp4"
+done
